@@ -40,77 +40,76 @@ Tamamen açık kaynak, dashboard ile yönetilebilir, klonlanabilir ve genişleti
    ```
 3. Veritabanı tablosu oluşturun (isteğe bağlı, recent profiles için):
    ```sql
-CREATE TABLE IF NOT EXISTS recent_profiles (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    profile_url VARCHAR(1000) NOT NULL,
-    platform VARCHAR(50) NOT NULL,
-    identifier VARCHAR(255) NOT NULL,
-    profile_image_base64 LONGTEXT NULL,
-    original_image_url VARCHAR(1000) NULL,
-    cover_image_url VARCHAR(1000) NULL,
-    viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_platform (platform),
-    INDEX idx_viewed_at (viewed_at),
-    INDEX idx_identifier (identifier)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+   CREATE TABLE IF NOT EXISTS recent_profiles (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       profile_url VARCHAR(1000) NOT NULL,
+       platform VARCHAR(50) NOT NULL,
+       identifier VARCHAR(255) NOT NULL,
+       profile_image_base64 LONGTEXT NULL,
+       original_image_url VARCHAR(1000) NULL,
+       cover_image_url VARCHAR(1000) NULL,
+       viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+       INDEX idx_platform (platform),
+       INDEX idx_viewed_at (viewed_at),
+       INDEX idx_identifier (identifier)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS platform_stats (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    platform VARCHAR(50) NOT NULL UNIQUE,
-    total_views INT DEFAULT 0,
-    last_viewed DATETIME NULL,
-    success_count INT DEFAULT 0,
-    fail_count INT DEFAULT 0,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+   CREATE TABLE IF NOT EXISTS platform_stats (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       platform VARCHAR(50) NOT NULL UNIQUE,
+       total_views INT DEFAULT 0,
+       last_viewed DATETIME NULL,
+       success_count INT DEFAULT 0,
+       fail_count INT DEFAULT 0,
+       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    provider_user_id VARCHAR(255) NOT NULL UNIQUE,
-    provider VARCHAR(20) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NULL,
-    picture_url VARCHAR(1000) NULL,
-    last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    is_admin TINYINT(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+   CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+       provider_user_id VARCHAR(255) NOT NULL UNIQUE,
+       provider VARCHAR(20) NOT NULL,
+       name VARCHAR(255) NOT NULL,
+       email VARCHAR(255) NULL,
+       picture_url VARCHAR(1000) NULL,
+       last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
+       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+       is_admin TINYINT(1) DEFAULT 1
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 4. Medya İçerikleri (Postlar, Thumbnail'lar vb. - isteğe bağlı detaylı kayıt)
-CREATE TABLE IF NOT EXISTS profile_media (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    profile_id INT NOT NULL,
-    media_type ENUM('post', 'highlight', 'cover', 'thumbnail') NOT NULL,
-    media_url VARCHAR(1000) NOT NULL,
-    thumbnail_url VARCHAR(1000) NULL,
-    caption TEXT NULL,
-    added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (profile_id) REFERENCES recent_profiles(id) ON DELETE CASCADE,
-    INDEX idx_profile_media (profile_id, media_type)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+   CREATE TABLE IF NOT EXISTS profile_media (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       profile_id INT NOT NULL,
+       media_type ENUM('post', 'highlight', 'cover', 'thumbnail') NOT NULL,
+       media_url VARCHAR(1000) NOT NULL,
+       thumbnail_url VARCHAR(1000) NULL,
+       caption TEXT NULL,
+       added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+       FOREIGN KEY (profile_id) REFERENCES recent_profiles(id) ON DELETE CASCADE,
+       INDEX idx_profile_media (profile_id, media_type)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS scrape_logs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    profile_url VARCHAR(1000) NOT NULL,
-    platform VARCHAR(50) NOT NULL,
-    error_message TEXT NULL,
-    http_code INT NULL,
-    method_used VARCHAR(100) NULL,
-    logged_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_logged_at (logged_at),
-    INDEX idx_platform_error (platform)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+   CREATE TABLE IF NOT EXISTS scrape_logs (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       profile_url VARCHAR(1000) NOT NULL,
+       platform VARCHAR(50) NOT NULL,
+       error_message TEXT NULL,
+       http_code INT NULL,
+       method_used VARCHAR(100) NULL,
+       logged_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+       INDEX idx_logged_at (logged_at),
+       INDEX idx_platform_error (platform)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS settings (
-    setting_key VARCHAR(100) PRIMARY KEY,
-    setting_value TEXT NULL,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+   CREATE TABLE IF NOT EXISTS settings (
+      setting_key VARCHAR(100) PRIMARY KEY,
+      setting_value TEXT NULL,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT IGNORE INTO settings (setting_key, setting_value) VALUES
-('recent_profiles_limit', '12'),
-('site_title', 'Sosyal Medya Profil Görüntüleyici'),
-('enable_registration', '0');
+   INSERT IGNORE INTO settings (setting_key, setting_value) VALUES
+   ('recent_profiles_limit', '12'),
+   ('site_title', 'Sosyal Medya Profil Görüntüleyici'),
+   ('enable_registration', '0');
    ```
 4. Siteye girin → "Dashboard'a Giriş Yap" → Google/GitHub/Facebook ile giriş yapın
 5. Dashboard'dan platformları düzenleyin → **Generate Scraper** yapın
