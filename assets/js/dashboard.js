@@ -179,6 +179,17 @@ function savePlatform() {
         },
         methods: [] // burada manuel dolduracağız, ileride otomatik topla
     };
+    
+    const defaultHeaders = {};
+	document.getElementById('default_headers').value.split('\n').forEach(line => {
+		if (line.trim() && line.includes(':')) {
+			const [key, ...val] = line.split(':');
+			defaultHeaders[key.trim()] = val.join(':').trim();
+		}
+	});
+
+	plat.default_headers = defaultHeaders;
+	plat.user_agent = document.getElementById('user_agent').value.trim();
 
     // Şimdilik basit: örnek yöntem ekle
     plat.methods = [{

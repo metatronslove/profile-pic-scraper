@@ -4,53 +4,48 @@
     "icon": "fab fa-instagram",
     "color": "#E1306C",
     "enabled": true,
-    "detect_patterns": ["instagram.com"],
+    "detect_patterns": ["instagram.com", "i.instagram.com"],
     "profile_url_pattern": "https://www.instagram.com/{identifier}/",
     "recent_profiles_limit": 12,
-    "extract_identifier": "preg_match('/instagram\\.com\\/([\\w.\\-]+)/i', $url, $m) ? $m[1] : null",
-    "methods": [
-      {
-        "name": "API v1 (x-ig-app-id)",
-        "type": "server_php",
-        "enabled": true,
-        "priority": 1,
-        "endpoint": "https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
-        "headers": {
-          "x-ig-app-id": "936619743392459",
-          "x-requested-with": "XMLHttpRequest"
-        },
-        "json_path_profile_pic_hd": "data.user.profile_pic_url_hd",
-        "json_path_profile_pic": "data.user.profile_pic_url",
-        "json_path_posts": "data.user.edge_owner_to_timeline_media.edges"
-      },
-      {
-        "name": "Browser Bridge (iframe fallback)",
-        "type": "browser_js",
-        "enabled": true,
-        "priority": 2,
-        "selectors": {
-          "og_image": "meta[property='og:image']",
-          "profile_pic": "img[src*='/s320x320/']"
-        },
-        "optimize_rules": [
-          {"find": "/s150x150/", "replace": "/s1080x1080/"}
-        ]
-      }
-    ],
     "extractable_content": {
       "profile_picture": true,
       "cover_photo": false,
       "highlighted_stories": true,
       "recent_posts": true,
       "post_thumbnails": true
-    }
+    },
+    "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1",
+    "default_headers": {
+      "x-ig-app-id": "936619743392459",
+      "x-requested-with": "XMLHttpRequest",
+      "Referer": "https://www.instagram.com/",
+      "Origin": "https://www.instagram.com"
+    },
+    "methods": [
+      {
+        "name": "API v1",
+        "type": "server_php",
+        "enabled": true,
+        "priority": 1,
+        "endpoint": "https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
+        "optimize_rules": [
+          {"find": "/s150x150/", "replace": "/s1080x1080/"}
+        ]
+      }
+    ]
   },
+
   "youtube": {
     "name": "YouTube",
-    "enabled": true,
-    "color": "#FF0000",
     "icon": "fab fa-youtube",
+    "color": "#FF0000",
+    "enabled": true,
     "detect_patterns": ["youtube.com", "youtu.be"],
+    "profile_url_pattern": "https://www.youtube.com/{identifier}",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "default_headers": {
+      "Referer": "https://www.youtube.com/"
+    },
     "methods": [
       {
         "name": "OG Image",
@@ -66,4 +61,6 @@
       }
     ]
   }
+
+  // Diğer platformlar aynı şekilde eklenebilir
 }

@@ -130,6 +130,18 @@ Bunu PHP cURL ile nasıl çekerim?</pre>
                 </div>
                 
                 <div class="input-group">
+					<label>User-Agent</label>
+					<textarea id="user_agent" rows="3" style="width:100%; font-family: monospace; padding: 10px; border-radius: 8px; border: 1px solid var(--light-dark);"><?= htmlspecialchars($plat['user_agent'] ?? '') ?></textarea>
+					<small>Platforma özel tarayıcı kimliği</small>
+				</div>
+
+				<div class="input-group">
+					<label>Varsayılan Header'lar (satır satır key: value)</label>
+					<textarea id="default_headers" rows="8" style="width:100%; font-family: monospace; padding: 10px; border-radius: 8px; border: 1px solid var(--light-dark);"><?= htmlspecialchars($plat['default_headers'] ? implode("\n", array_map(fn($k,$v) => "$k: $v", array_keys($plat['default_headers']), $plat['default_headers'])) : '') ?></textarea>
+					<small>Her istekte otomatik eklenecek header'lar</small>
+				</div>
+                
+                <div class="input-group">
                     <label>URL Tespit Pattern (virgülle ayrılmış)</label>
                     <input type="text" id="detect_patterns" placeholder="instagram.com, i.instagram.com">
                 </div>

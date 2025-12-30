@@ -3,9 +3,13 @@
 
 require_once __DIR__ . '/../config.php';
 
-// Orijinal advancedCurlRequest fonksiyonu (platforma özel header'larla)
+// Dinamik advancedCurlRequest — platforma özel ayarlar platforms.json'dan gelir
 function advancedCurlRequest($url, $options = [], $platform = null) {
     $ch = curl_init();
+
+    // Platform ayarlarını yükle
+    $platforms = json_decode(file_get_contents(__DIR__ . '/platforms.json'), true);
+    $plat = $platforms[$platform] ?? null;
 
     $defaultOptions = [
         CURLOPT_URL => $url,
@@ -26,31 +30,23 @@ function advancedCurlRequest($url, $options = [], $platform = null) {
         ]
     ];
 
-    $platformHeaders = [];
-    $userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-
-    switch ($platform) {
-        case 'instagram':
-            $userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1';
-            $platformHeaders = [
-                'x-ig-app-id: 936619743392459',
-                'x-requested-with: XMLHttpRequest',
-                'Referer: https://www.instagram.com/',
-                'Origin: https://www.instagram.com'
-            ];
-            break;
-        // Diğer platformlar için orijinal header'lar...
-    }
-
+    // Platforma özel User-Agent
+    $userAgent = $plat['user_agent'] ?? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
     $defaultOptions[CURLOPT_USERAGENT] = $userAgent;
-    $defaultOptions[CURLOPT_HTTPHEADER] = array_merge($defaultOptions[CURLOPT_HTTPHEADER], $platformHeaders);
 
-    curl_setopt_array($ch, $defaultOptions);
+    // Platforma özel varsayılan header'lar
+    $extraHeaders = $plat['default_headers'] ?? [];
+    $finalHeaders = $defaultOptions[CURLOPT_HTTPHEADER];
+    foreach ($extraHeaders as $key => $value) {
+        $finalHeaders[] = "$key: $value";
+    }
+    $defaultOptions[CURLOPT_HTTPHEADER] = $finalHeaders;
+
+    curl_setopt_array($ch, array_replace($defaultOptions, $options));
 
     $response = curl_exec($ch);
     $error = curl_error($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
     curl_close($ch);
 
     return [
