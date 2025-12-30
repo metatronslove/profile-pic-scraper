@@ -40,25 +40,20 @@ Tamamen açık kaynak, dashboard ile yönetilebilir, klonlanabilir ve genişleti
    ```
 3. Veritabanı tablosu oluşturun (isteğe bağlı, recent profiles için):
    ```sql
--- Veritabanı: profile_pic_scraper
--- Tarih: 30 Aralık 2025
-
--- 1. Son Görüntülenen Profiller (Recent Profiles)
 CREATE TABLE IF NOT EXISTS recent_profiles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     profile_url VARCHAR(1000) NOT NULL,
     platform VARCHAR(50) NOT NULL,
-    identifier VARCHAR(255) NOT NULL,                    -- kullanıcı adı veya ID
-    profile_image_base64 LONGTEXT NULL,                  -- base64 encoded resim (isteğe bağlı)
-    original_image_url VARCHAR(1000) NULL,               -- orijinal yüksek çözünürlük URL
-    cover_image_url VARCHAR(1000) NULL,                  -- kapak resmi (isteğe bağlı)
+    identifier VARCHAR(255) NOT NULL,
+    profile_image_base64 LONGTEXT NULL,
+    original_image_url VARCHAR(1000) NULL,
+    cover_image_url VARCHAR(1000) NULL,
     viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_platform (platform),
     INDEX idx_viewed_at (viewed_at),
     INDEX idx_identifier (identifier)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 2. Platform İstatistikleri (Genel Kullanım İstatistikleri)
 CREATE TABLE IF NOT EXISTS platform_stats (
     id INT AUTO_INCREMENT PRIMARY KEY,
     platform VARCHAR(50) NOT NULL UNIQUE,
@@ -69,23 +64,22 @@ CREATE TABLE IF NOT EXISTS platform_stats (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. Kullanıcı Oturumları (OAuth Login için - basit)
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    provider_user_id VARCHAR(255) NOT NULL UNIQUE,       -- Google/GitHub/Facebook ID
-    provider VARCHAR(20) NOT NULL,                       -- google, github, facebook
+    provider_user_id VARCHAR(255) NOT NULL UNIQUE,
+    provider VARCHAR(20) NOT NULL,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NULL,
     picture_url VARCHAR(1000) NULL,
     last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    is_admin TINYINT(1) DEFAULT 1                        -- şimdilik herkes admin
+    is_admin TINYINT(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 4. Medya İçerikleri (Postlar, Thumbnail'lar vb. - isteğe bağlı detaylı kayıt)
 CREATE TABLE IF NOT EXISTS profile_media (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    profile_id INT NOT NULL,                             -- recent_profiles.id'ye referans
+    profile_id INT NOT NULL,
     media_type ENUM('post', 'highlight', 'cover', 'thumbnail') NOT NULL,
     media_url VARCHAR(1000) NOT NULL,
     thumbnail_url VARCHAR(1000) NULL,
@@ -95,7 +89,6 @@ CREATE TABLE IF NOT EXISTS profile_media (
     INDEX idx_profile_media (profile_id, media_type)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 5. Hata Logları (Scraping hatalarını takip için)
 CREATE TABLE IF NOT EXISTS scrape_logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     profile_url VARCHAR(1000) NOT NULL,
@@ -108,14 +101,12 @@ CREATE TABLE IF NOT EXISTS scrape_logs (
     INDEX idx_platform_error (platform)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 6. Dashboard Ayarları (İsteğe bağlı - global ayarlar)
 CREATE TABLE IF NOT EXISTS settings (
     setting_key VARCHAR(100) PRIMARY KEY,
     setting_value TEXT NULL,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Örnek başlangıç ayarları (isteğe bağlı ekleyebilirsin)
 INSERT IGNORE INTO settings (setting_key, setting_value) VALUES
 ('recent_profiles_limit', '12'),
 ('site_title', 'Sosyal Medya Profil Görüntüleyici'),
