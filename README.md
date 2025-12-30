@@ -125,6 +125,8 @@ InfinityFree'de Composer çalışmasa bile:
 1. Yerel bilgisayarınızda çalıştırın:
    ```bash
    composer require guzzlehttp/guzzle
+   composer require league/oauth2-google
+   composer require league/oauth2-github
    composer require league/oauth2-facebook
    # vb.
    ```
