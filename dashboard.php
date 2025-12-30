@@ -1,9 +1,11 @@
 <?php
 require_once 'config.php';
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL);
-    exit;
+// Oturum kontrolü - YÖNLENDİRME YERİNE SADECE BİLGİ VER
+$loggedIn = !empty($_SESSION['user']);
+if (!$loggedIn) {
+    // Yönlendirme YAPMA — JS modal'ı açsın diye bekle
+    // Sadece bilgi olarak tutalım
 }
 
 $pageTitle = "Ayarlar Dashboard";
@@ -14,6 +16,16 @@ require 'assets/templates/modals.php'; // Login modalı da burada
 ?>
 
 <div class="container">
+	<?php if (!$loggedIn): ?>
+        <!-- JS modal'ı açacak, ama kullanıcıya bilgi verelim -->
+        <div class="card error" style="text-align:center; padding:30px;">
+            <h2><i class="fas fa-lock"></i> Erişim Kısıtlı</h2>
+            <p>Dashboard'a erişmek için lütfen giriş yapın.</p>
+            <button onclick="openLoginModal()" class="btn-action" style="margin-top:20px;">
+                <i class="fas fa-sign-in-alt"></i> Giriş Yap
+            </button>
+        </div>
+    <?php else: ?>
     <!-- Header -->
     <div class="header" style="margin: -20px -20px 40px -20px; border-radius: 16px 16px 0 0;">
         <h1>Ayarlar Dashboard</h1>
@@ -101,12 +113,13 @@ JSON path: data.user.profile_pic_url_hd
 s150x150 → s1080x1080 optimize et
 Bunu PHP cURL ile nasıl çekerim?</pre>
     </div>
+    <?php endif; ?>
 </div>
 
 <!-- Platform Düzenleme Modal'ı - Orijinal stillerle %100 uyumlu -->
 <div id="editModal" class="modal">
     <div class="modal-content large">
-        <span class="close" onclick="closeModal()">&times;</span>
+        <span class="close" onclick="closeModal()">❎</span>
         <div class="modal-header" style="background: var(--primary);">
             <h2 id="modalTitle" style="margin:0; color:white;">Platform Düzenle</h2>
         </div>
@@ -175,5 +188,16 @@ Bunu PHP cURL ile nasıl çekerim?</pre>
         </div>
     </div>
 </div>
-
+<script>
+// Sayfa yüklendiğinde oturum kontrolü yap
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('<?= BASE_URL ?>engine/auth/check.php')
+        .then(r => r.json())
+        .then(data => {
+            if (!data.logged_in) {
+                openLoginModal();
+            }
+        });
+});
+</script>
 <?php require 'assets/templates/footer.php'; ?>

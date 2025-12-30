@@ -1,4 +1,3 @@
-<!-- assets/templates/header.php -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -24,5 +23,13 @@
     </script>
 </head>
 <body>
-    <?php include 'loading-overlay.php'; // varsa ?>
+    <!-- Loading Overlay (CSS + JS ile yönetiliyor, ayrı dosya gerekmiyor) -->
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; color: white; font-size: 1.5rem;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 20px;"></i>
+        <div>İşlem yapılıyor, lütfen bekleyin...</div>
+    </div>
+
+    <!-- Notification Container -->
     <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- Sayfa içeriği burada devam eder -->

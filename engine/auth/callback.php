@@ -76,7 +76,13 @@ if ($userData && isset($userData['id'])) {
         'picture'  => $userData['picture'] ?? null,
         'provider' => $provider
     ];
-    $_SESSION['admin'] = true; // Basit admin yetkisi
+}
+
+$providerId = $provider . '_' . $userData['id'];
+if (strpos(ADMIN_USERS, $providerId) !== false) {
+    $_SESSION['admin'] = true;
+} else {
+    $_SESSION['admin'] = false; // Sadece görüntüleme izni
 }
 
 header('Location: ' . BASE_URL . 'dashboard.php');
