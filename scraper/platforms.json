@@ -1,0 +1,69 @@
+{
+  "instagram": {
+    "name": "Instagram",
+    "icon": "fab fa-instagram",
+    "color": "#E1306C",
+    "enabled": true,
+    "detect_patterns": ["instagram.com"],
+    "profile_url_pattern": "https://www.instagram.com/{identifier}/",
+    "recent_profiles_limit": 12,
+    "extract_identifier": "preg_match('/instagram\\.com\\/([\\w.\\-]+)/i', $url, $m) ? $m[1] : null",
+    "methods": [
+      {
+        "name": "API v1 (x-ig-app-id)",
+        "type": "server_php",
+        "enabled": true,
+        "priority": 1,
+        "endpoint": "https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
+        "headers": {
+          "x-ig-app-id": "936619743392459",
+          "x-requested-with": "XMLHttpRequest"
+        },
+        "json_path_profile_pic_hd": "data.user.profile_pic_url_hd",
+        "json_path_profile_pic": "data.user.profile_pic_url",
+        "json_path_posts": "data.user.edge_owner_to_timeline_media.edges"
+      },
+      {
+        "name": "Browser Bridge (iframe fallback)",
+        "type": "browser_js",
+        "enabled": true,
+        "priority": 2,
+        "selectors": {
+          "og_image": "meta[property='og:image']",
+          "profile_pic": "img[src*='/s320x320/']"
+        },
+        "optimize_rules": [
+          {"find": "/s150x150/", "replace": "/s1080x1080/"}
+        ]
+      }
+    ],
+    "extractable_content": {
+      "profile_picture": true,
+      "cover_photo": false,
+      "highlighted_stories": true,
+      "recent_posts": true,
+      "post_thumbnails": true
+    }
+  },
+  "youtube": {
+    "name": "YouTube",
+    "enabled": true,
+    "color": "#FF0000",
+    "icon": "fab fa-youtube",
+    "detect_patterns": ["youtube.com", "youtu.be"],
+    "methods": [
+      {
+        "name": "OG Image",
+        "type": "server_php",
+        "enabled": true,
+        "priority": 1,
+        "selectors": {
+          "og_image": "meta[property='og:image']"
+        },
+        "optimize_rules": [
+          {"find": "=s88-c-k", "replace": "=s800-c-k"}
+        ]
+      }
+    ]
+  }
+}
