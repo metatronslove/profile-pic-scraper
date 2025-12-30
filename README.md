@@ -1,6 +1,6 @@
 # Profile Pic Scraper v3.0
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: GPL](https://img.shields.io/badge/License-GPL-yellow.svg)](https://opensource.org/licenses/gpl-2-0)
 [![PHP](https://img.shields.io/badge/PHP-8.0%2B-blue)](https://php.net)
 [![InfinityFree Compatible](https://img.shields.io/badge/InfinityFree-Compatible-brightgreen)](https://infinityfree.net)
 
