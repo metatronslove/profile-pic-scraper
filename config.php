@@ -15,19 +15,6 @@ define('LOG_DIR', __DIR__ . '/logs/');
 define('SCRAPER_DIR', __DIR__ . '/scraper/');
 define('ENGINE_DIR', __DIR__ . '/engine/');
 
-// OAuth App Key'leri - Kullanıcı dashboard'dan kendi key'lerini girecek (ileride ayarlar sayfası)
-define('GOOGLE_CLIENT_ID', 'your-google-client-id.apps.googleusercontent.com');
-define('GOOGLE_CLIENT_SECRET', 'your-google-secret');
-define('GOOGLE_REDIRECT_URI', BASE_URL . 'engine/auth/callback.php?provider=google');
-
-define('GITHUB_CLIENT_ID', 'your-github-client-id');
-define('GITHUB_CLIENT_SECRET', 'your-github-secret');
-define('GITHUB_REDIRECT_URI', BASE_URL . 'engine/auth/callback.php?provider=github');
-
-define('FACEBOOK_APP_ID', 'your-facebook-app-id');
-define('FACEBOOK_APP_SECRET', 'your-facebook-secret');
-define('FACEBOOK_REDIRECT_URI', BASE_URL . 'engine/auth/callback.php?provider=facebook');
-
 if (!is_dir(CACHE_DIR)) mkdir(CACHE_DIR, 0755, true);
 if (!is_dir(LOG_DIR)) mkdir(LOG_DIR, 0755, true);
 
@@ -50,4 +37,19 @@ function baseUrl($path = '') {
     return $protocol . '://' . $host . $base . '/' . ltrim($path, '/');
 }
 define('BASE_URL', baseUrl());
+
+// OAuth App Key'leri - Kullanıcı dashboard'dan kendi key'lerini girecek (ileride ayarlar sayfası)
+define('GOOGLE_CLIENT_ID', 'your-google-client-id.apps.googleusercontent.com');
+define('GOOGLE_CLIENT_SECRET', 'your-google-secret');
+define('GOOGLE_REDIRECT_URI', BASE_URL . 'engine/auth/callback.php?provider=google');
+
+define('GITHUB_CLIENT_ID', 'your-github-client-id');
+define('GITHUB_CLIENT_SECRET', 'your-github-secret');
+define('GITHUB_REDIRECT_URI', BASE_URL . 'engine/auth/callback.php?provider=github');
+
+define('FACEBOOK_APP_ID', 'your-facebook-app-id');
+define('FACEBOOK_APP_SECRET', 'your-facebook-secret');
+define('FACEBOOK_REDIRECT_URI', BASE_URL . 'engine/auth/callback.php?provider=facebook');
+
+define('ADMIN_USERS', 'google_123456789|github_metatronslove|facebook_987654321');
 ?>
