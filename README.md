@@ -186,3 +186,11 @@ Sonsuz teşekkürler!
 
 **⭐ Star vermeyi unutmayın!**  
 Her star bir private profil resmi daha demek 😏
+
+## ☕ Destek Olun / Support
+
+Projemi beğendiyseniz, bana bir kahve ısmarlayarak destek olabilirsiniz!
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/metatronslove)
+
+Teşekkürler! 🙏
